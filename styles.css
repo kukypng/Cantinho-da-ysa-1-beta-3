@@ -1,226 +1,139 @@
-let carrinho = [];
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    const anoAtual = new Date().getFullYear();
-
-    document.getElementById('ano-atual').textContent = anoAtual;
-
-});
-
-
-
-function adicionarCarrinho(elemento) {
-
-    const produto = elemento.parentElement;
-
-    const nome = produto.getAttribute('data-nome');
-
-    const preco = parseInt(produto.getAttribute('data-preco'));
-
-    carrinho.push({ nome, preco });
-
-    atualizarCarrinho();
-
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
 }
 
-
-
-
-
-
-
-function atualizarCarrinho() {
-
-    const listaCarrinho = document.getElementById('lista-carrinho');
-
-    listaCarrinho.innerHTML = '';
-
-    let total = 0;
-
-
-
-    carrinho.forEach((item, index) => {
-
-        const li = document.createElement('li');
-
-        li.textContent = `${item.nome} - R$ ${item.preco},00`;
-
-
-
-        const removerButton = document.createElement('button');
-
-        removerButton.textContent = 'Remover';
-
-        removerButton.classList.add('btn-remover'); // Adiciona a classe de estilo
-
-        removerButton.onclick = () => removerCarrinho(index);
-
-
-
-        li.appendChild(removerButton);
-
-        listaCarrinho.appendChild(li);
-
-        total += item.preco;
-
-    });
-
-
-
-    const totalElement = document.getElementById('total');
-
-    totalElement.textContent = `Total: R$ ${total},00`;
-
+header {
+    background-color: #6a0dad;
+    color: white;
+    text-align: center;
+    padding: 1rem;
 }
 
-
-
-
-
-
-
-
-
-function removerCarrinho(index) {
-
-    carrinho.splice(index, 1);
-
-    atualizarCarrinho();
-
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
 }
 
-
-
-function exibirRecibo() {
-
-    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
-
-    const entrega = total >= 28 ? 0 : 9;
-
-    const subtotal = total;
-
-    const totalComEntrega = subtotal + entrega;
-
-
-
-    let detalhes = 'Pedido:🐦\n';
-
-    carrinho.forEach(item => {
-
-        detalhes += `${item.nome} - R$ ${item.preco},00\n`;
-
-    });
-
-    detalhes += `\nSubtotal: R$ ${subtotal},00\n`;
-
-    detalhes += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
-
-    detalhes += `Total: R$ ${totalComEntrega},00\n`;
-
-
-
-    document.getElementById('detalhes-recibo').innerText = detalhes;
-
-    document.getElementById('carrinho').style.display = 'none';
-
-    document.getElementById('recibo').style.display = 'block';
-
+#produtos, #carrinho, #recibo {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
 }
 
+.produto {
+    text-align: center;
+    margin-bottom: 1rem;
+}
 
+.produto img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
 
-function selecionarPagamento() {
+button.btn, a.btn {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
 
-    const pagamento = document.getElementById('pagamento').value;
+button.btn:hover, a.btn:hover {
+    background-color: #4b0082;
+}
 
-    const trocoContainer = document.getElementById('troco-container');
+a#voltar-menu {
+    margin-top: 1rem;
+    display: block;
+}
 
-    if (pagamento === 'dinheiro') {
-
-        trocoContainer.style.display = 'block';
-
-    } else {
-
-        trocoContainer.style.display = 'none';
-
+@media (min-width: 600px) {
+    main {
+        flex-direction: row;
+        justify-content: space-around;
     }
-
 }
 
-
-
-function confirmarPedido() {
-
-    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
-
-    const entrega = total >= 28 ? 0 : 9;
-
-    const subtotal = total;
-
-    const totalComEntrega = subtotal + entrega;
-
-    const endereco = document.getElementById('endereco').value;
-
-    const pagamento = document.getElementById('pagamento').value;
-
-    let troco = '';
-
-
-
-    if (pagamento === 'dinheiro') {
-
-        troco = document.getElementById('troco').value;
-
-    }
-
-
-
-    let mensagem = 'Pedido:\n';
-
-    carrinho.forEach(item => {
-
-        mensagem += `${item.nome} - R$ ${item.preco},00\n`;
-
-    });
-
-    mensagem += `\nSubtotal: R$ ${subtotal},00\n`;
-
-    mensagem += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
-
-    mensagem += `Total: R$ ${totalComEntrega},00\n`;
-
-    mensagem += `Endereço: ${endereco}\n`;
-
-    mensagem += `Forma de Pagamento: ${pagamento}\n`;
-
-    if (pagamento === 'dinheiro') {
-
-        mensagem += `Troco para: R$ ${troco},00\n`;
-
-    }
-
-
-
-    if (confirm('Deseja confirmar o pedido?')) {
-
-        window.open(`https://wa.me/5564999421093?text=${encodeURIComponent(mensagem)}`, '_blank');
-
-    }
-
+footer {
+    background-color: #6a0dad;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
-
-
-// Adicionei esta função ao final
-
-function redirecionar() {
-
-    window.location.href = "index.html"; // Substitua pelo URL desejado
-
+footer p {
+    margin: 0;
 }
 
+label, input, select {
+    display: block;
+    margin: 0.5rem 0;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#troco-container {
+    margin-top: 1rem;
+}
+
+/* Adicionei esta seção */
+button.btn, a.btn {
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+button.btn:hover, a.btn:hover {
+    background-color: #4b0082;
+}
+
+button.btn-remover {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+button.btn-remover:hover {
+    background-color: #cc0000;
+}
 
 
