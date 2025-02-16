@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cantinho Da Ysa</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Cantinho Da Ysa</h1>
+    </header>
+    <main>
+        <section id="produtos">
+            <h2>Bolos de Pote</h2>
+            <div class="produto" data-nome="Brigadeiro" data-preco="14">
+                <img src="brigadeiro.jpg" alt="Bolo de Brigadeiro">
+                <h3>Brigadeiro</h3>
+                <p>R$ 14,00</p>
+                <button class="btn" onclick="adicionarCarrinho(this)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="produto" data-nome="Prestigio" data-preco="14">
+                <img src="prestigio.jpg" alt="Bolo de Prestigio">
+                <h3>Prestigio</h3>
+                <p>R$ 14,00</p>
+                <button class="btn" onclick="adicionarCarrinho(this)">Adicionar ao Carrinho</button>
+            </div>
+            <div class="produto" data-nome="Ninho com Nutela" data-preco="20">
+                <img src="ninho_nutela.jpg" alt="Bolo de Ninho com Nutela">
+                <h3>Ninho com Nutela</h3>
+                <p>R$ 20,00</p>
+                <button class="btn" onclick="adicionarCarrinho(this)">Adicionar ao Carrinho</button>
+            </div>
+        </section>
+        <section id="carrinho">
+            <h2>Carrinho</h2>
+            <ul id="lista-carrinho"></ul>
+            <p id="total">Total: R$ 0,00</p>
+            <button class="btn" onclick="exibirRecibo()">Confirmar Pedido</button>
+            <a href="https://example.com" id="voltar-menu" class="btn">Voltar para o menu</a>
+        </section>
+        <section id="recibo" style="display: none;">
+            <h2>Recibo</h2>
+            <p id="detalhes-recibo"></p>
+            <label for="endereco">Endereço de Entrega:</label>
+            <input type="text" id="endereco" name="endereco" required>
+            <label for="pagamento">Forma de Pagamento:</label>
+            <select id="pagamento" name="pagamento" onchange="selecionarPagamento()">
+                <option value="pix">Pix</option>
+                <option value="cartao">Cartão</option>
+                <option value="dinheiro">Dinheiro</option>
+            </select>
+            <div id="troco-container" style="display: none;">
+                <label for="troco">Troco para:</label>
+                <input type="number" id="troco" name="troco" min="0">
+            </div>
+            <button class="btn" onclick="confirmarPedido()">Confirmar Pedido</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; <span id="ano-atual"></span> Cantinho Da Ysa.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
