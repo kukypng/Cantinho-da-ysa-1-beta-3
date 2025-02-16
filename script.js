@@ -191,3 +191,13 @@ function confirmarPedido() {
     }
 
 }
+
+
+
+// Adicionei esta função ao final
+
+function redirecionar() {
+
+    window.location.href = "index.html"; // Substitua pelo URL desejado
+
+}
