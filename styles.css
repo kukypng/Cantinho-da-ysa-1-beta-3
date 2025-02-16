@@ -1,140 +1,150 @@
-body {
-
-    font-family: Arial, sans-serif;
-
-    background-color: #f5f5f5;
-
-    margin: 0;
-
-    padding: 0;
-
-}
+let carrinho = [];
 
 
 
-header {
+document.addEventListener('DOMContentLoaded', () => {
 
-    background-color: #6a0dad;
+    const anoAtual = new Date().getFullYear();
 
-    color: white;
+    document.getElementById('ano-atual').textContent = anoAtual;
 
-    text-align: center;
-
-    padding: 1rem;
-
-}
+});
 
 
 
-main {
+function adicionarCarrinho(elemento) {
 
-    display: flex;
+    const produto = elemento.parentElement;
 
-    flex-direction: column;
+    const nome = produto.getAttribute('data-nome');
 
-    align-items: center;
+    const preco = parseInt(produto.getAttribute('data-preco'));
 
-    padding: 2rem;
+    carrinho.push({ nome, preco });
+
+    atualizarCarrinho();
 
 }
 
 
 
-#produtos, #carrinho, #recibo {
-
-    background-color: white;
-
-    padding: 1rem;
-
-    border-radius: 8px;
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-    width: 100%;
-
-    max-width: 600px;
-
-    margin-bottom: 2rem;
-
-}
 
 
 
-.produto {
 
-    text-align: center;
+function atualizarCarrinho() {
 
-    margin-bottom: 1rem;
+    const listaCarrinho = document.getElementById('lista-carrinho');
 
-}
+    listaCarrinho.innerHTML = '';
 
-
-
-.produto img {
-
-    width: 100%;
-
-    height: auto;
-
-    border-radius: 8px;
-
-}
+    let total = 0;
 
 
 
-button.btn, a.btn {
+    carrinho.forEach((item, index) => {
 
-    background-color: #6a0dad;
+        const li = document.createElement('li');
 
-    color: white;
+        li.textContent = `${item.nome} - R$ ${item.preco},00`;
 
-    border: none;
 
-    padding: 0.5rem 1rem;
 
-    cursor: pointer;
+        const removerButton = document.createElement('button');
 
-    border-radius: 4px;
+        removerButton.textContent = 'Remover';
 
-    text-align: center;
+        removerButton.classList.add('btn-remover'); // Adiciona a classe de estilo
 
-    text-decoration: none;
+        removerButton.onclick = () => removerCarrinho(index);
 
-    display: inline-block;
 
-    transition: background-color 0.3s ease;
 
-    margin-top: 0.5rem;
+        li.appendChild(removerButton);
+
+        listaCarrinho.appendChild(li);
+
+        total += item.preco;
+
+    });
+
+
+
+    const totalElement = document.getElementById('total');
+
+    totalElement.textContent = `Total: R$ ${total},00`;
 
 }
 
 
 
-button.btn:hover, a.btn:hover {
-
-    background-color: #4b0082;
-
-}
 
 
 
-a#voltar-menu {
 
-    margin-top: 1rem;
 
-    display: block;
+
+function removerCarrinho(index) {
+
+    carrinho.splice(index, 1);
+
+    atualizarCarrinho();
 
 }
 
 
 
-@media (min-width: 600px) {
+function exibirRecibo() {
 
-    main {
+    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
 
-        flex-direction: row;
+    const entrega = total >= 28 ? 0 : 9;
 
-        justify-content: space-around;
+    const subtotal = total;
+
+    const totalComEntrega = subtotal + entrega;
+
+
+
+    let detalhes = 'Pedido:🐦\n';
+
+    carrinho.forEach(item => {
+
+        detalhes += `${item.nome} - R$ ${item.preco},00\n`;
+
+    });
+
+    detalhes += `\nSubtotal: R$ ${subtotal},00\n`;
+
+    detalhes += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
+
+    detalhes += `Total: R$ ${totalComEntrega},00\n`;
+
+
+
+    document.getElementById('detalhes-recibo').innerText = detalhes;
+
+    document.getElementById('carrinho').style.display = 'none';
+
+    document.getElementById('recibo').style.display = 'block';
+
+}
+
+
+
+function selecionarPagamento() {
+
+    const pagamento = document.getElementById('pagamento').value;
+
+    const trocoContainer = document.getElementById('troco-container');
+
+    if (pagamento === 'dinheiro') {
+
+        trocoContainer.style.display = 'block';
+
+    } else {
+
+        trocoContainer.style.display = 'none';
 
     }
 
@@ -142,98 +152,75 @@ a#voltar-menu {
 
 
 
-footer {
+function confirmarPedido() {
 
-    background-color: #6a0dad;
+    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
 
-    color: white;
+    const entrega = total >= 28 ? 0 : 9;
 
-    text-align: center;
+    const subtotal = total;
 
-    padding: 1rem;
+    const totalComEntrega = subtotal + entrega;
 
-    position: fixed;
+    const endereco = document.getElementById('endereco').value;
 
-    bottom: 0;
+    const pagamento = document.getElementById('pagamento').value;
 
-    width: 100%;
-
-}
+    let troco = '';
 
 
 
-footer p {
+    if (pagamento === 'dinheiro') {
 
-    margin: 0;
+        troco = document.getElementById('troco').value;
 
-}
-
-
-
-label, input, select {
-
-    display: block;
-
-    margin: 0.5rem 0;
-
-}
+    }
 
 
 
-input, select {
+    let mensagem = 'Pedido:\n';
 
-    width: 100%;
+    carrinho.forEach(item => {
 
-    padding: 0.5rem;
+        mensagem += `${item.nome} - R$ ${item.preco},00\n`;
 
-    border: 1px solid #ccc;
+    });
 
-    border-radius: 4px;
+    mensagem += `\nSubtotal: R$ ${subtotal},00\n`;
 
-}
+    mensagem += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
+
+    mensagem += `Total: R$ ${totalComEntrega},00\n`;
+
+    mensagem += `Endereço: ${endereco}\n`;
+
+    mensagem += `Forma de Pagamento: ${pagamento}\n`;
+
+    if (pagamento === 'dinheiro') {
+
+        mensagem += `Troco para: R$ ${troco},00\n`;
+
+    }
 
 
 
-#troco-container {
+    if (confirm('Deseja confirmar o pedido?')) {
 
-    margin-top: 1rem;
+        window.open(`https://wa.me/5564999421093?text=${encodeURIComponent(mensagem)}`, '_blank');
 
-}
-
-
-
-/* Adicionei esta seção */
-
-button.btn, a.btn {
-
-    background-color: #6a0dad;
-
-    color: white;
-
-    border: none;
-
-    padding: 0.5rem 1rem;
-
-    cursor: pointer;
-
-    border-radius: 4px;
-
-    text-align: center;
-
-    text-decoration: none;
-
-    display: inline-block;
-
-    transition: background-color 0.3s ease;
-
-    margin-top: 0.5rem;
+    }
 
 }
 
 
 
-button.btn:hover, a.btn:hover {
+// Adicionei esta função ao final
 
-    background-color: #4b0082;
+function redirecionar() {
+
+    window.location.href = "index.html"; // Substitua pelo URL desejado
 
 }
+
+
+
