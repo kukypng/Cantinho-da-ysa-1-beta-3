@@ -28,6 +28,10 @@ function adicionarCarrinho(elemento) {
 
 
 
+
+
+
+
 function atualizarCarrinho() {
 
     const listaCarrinho = document.getElementById('lista-carrinho');
@@ -36,17 +40,25 @@ function atualizarCarrinho() {
 
     let total = 0;
 
+
+
     carrinho.forEach((item, index) => {
 
         const li = document.createElement('li');
 
         li.textContent = `${item.nome} - R$ ${item.preco},00`;
 
+
+
         const removerButton = document.createElement('button');
 
         removerButton.textContent = 'Remover';
 
+        removerButton.classList.add('btn-remover'); // Adiciona a classe de estilo
+
         removerButton.onclick = () => removerCarrinho(index);
+
+
 
         li.appendChild(removerButton);
 
@@ -56,11 +68,19 @@ function atualizarCarrinho() {
 
     });
 
+
+
     const totalElement = document.getElementById('total');
 
     totalElement.textContent = `Total: R$ ${total},00`;
 
 }
+
+
+
+
+
+
 
 
 
@@ -86,7 +106,7 @@ function exibirRecibo() {
 
 
 
-    let detalhes = 'Pedido:\n';
+    let detalhes = 'Pedido:🐦\n';
 
     carrinho.forEach(item => {
 
@@ -201,3 +221,6 @@ function redirecionar() {
     window.location.href = "index.html"; // Substitua pelo URL desejado
 
 }
+
+
+
