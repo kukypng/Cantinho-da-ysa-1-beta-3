@@ -199,3 +199,41 @@ input, select {
     margin-top: 1rem;
 
 }
+
+
+
+/* Adicionei esta seção */
+
+button.btn, a.btn {
+
+    background-color: #6a0dad;
+
+    color: white;
+
+    border: none;
+
+    padding: 0.5rem 1rem;
+
+    cursor: pointer;
+
+    border-radius: 4px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    display: inline-block;
+
+    transition: background-color 0.3s ease;
+
+    margin-top: 0.5rem;
+
+}
+
+
+
+button.btn:hover, a.btn:hover {
+
+    background-color: #4b0082;
+
+}
