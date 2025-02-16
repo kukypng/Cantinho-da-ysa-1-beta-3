@@ -13,8 +13,6 @@ function adicionarCarrinho(elemento) {
     atualizarCarrinho();
 }
 
-
-
 function atualizarCarrinho() {
     const listaCarrinho = document.getElementById('lista-carrinho');
     listaCarrinho.innerHTML = '';
@@ -26,7 +24,7 @@ function atualizarCarrinho() {
 
         const removerButton = document.createElement('button');
         removerButton.textContent = 'Remover';
-        removerButton.classList.add('btn-remover'); // Adiciona a classe de estilo
+        removerButton.classList.add('btn-remover');
         removerButton.onclick = () => removerCarrinho(index);
 
         li.appendChild(removerButton);
@@ -36,10 +34,46 @@ function atualizarCarrinho() {
 
     const totalElement = document.getElementById('total');
     totalElement.textContent = `Total: R$ ${total},00`;
+
+    // Atualizar o recibo em tempo real
+    atualizarRecibo();
 }
 
+function atualizarRecibo() {
+    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
+    const entrega = total >= 28 ? 0 : 9;
+    const subtotal = total;
+    const totalComEntrega = subtotal + entrega;
 
+    let detalhes = 'Pedido:\n';
+    const detalhesRecibo = document.getElementById('detalhes-recibo');
+    detalhesRecibo.innerHTML = ''; // Limpa o conteúdo anterior
 
+    carrinho.forEach((item, index) => {
+        detalhes += `${item.nome} - R$ ${item.preco},00\n`;
+
+        const p = document.createElement('p');
+        p.textContent = `${item.nome} - R$ ${item.preco},00`;
+
+        const removerButton = document.createElement('button');
+        removerButton.textContent = 'Remover';
+        removerButton.classList.add('btn-remover');
+        removerButton.onclick = () => {
+            removerCarrinho(index);
+            atualizarRecibo();
+        };
+
+        p.appendChild(removerButton);
+        detalhesRecibo.appendChild(p);
+    });
+    detalhes += `\nSubtotal: R$ ${subtotal},00\n`;
+    detalhes += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
+    detalhes += `Total: R$ ${totalComEntrega},00\n`;
+
+    const totalP = document.createElement('p');
+    totalP.textContent = detalhes;
+    detalhesRecibo.appendChild(totalP);
+}
 
 function removerCarrinho(index) {
     carrinho.splice(index, 1);
@@ -47,22 +81,9 @@ function removerCarrinho(index) {
 }
 
 function exibirRecibo() {
-    const total = carrinho.reduce((sum, item) => sum + item.preco, 0);
-    const entrega = total >= 28 ? 0 : 9;
-    const subtotal = total;
-    const totalComEntrega = subtotal + entrega;
-
-    let detalhes = 'Pedido:\n';
-    carrinho.forEach(item => {
-        detalhes += `${item.nome} - R$ ${item.preco},00\n`;
-    });
-    detalhes += `\nSubtotal: R$ ${subtotal},00\n`;
-    detalhes += entrega === 0 ? 'Entrega: Grátis\n' : `Entrega: R$ ${entrega},00\n`;
-    detalhes += `Total: R$ ${totalComEntrega},00\n`;
-
-    document.getElementById('detalhes-recibo').innerText = detalhes;
     document.getElementById('carrinho').style.display = 'none';
     document.getElementById('recibo').style.display = 'block';
+    atualizarRecibo(); // Atualiza o recibo ao exibir
 }
 
 function selecionarPagamento() {
@@ -84,8 +105,17 @@ function confirmarPedido() {
     const pagamento = document.getElementById('pagamento').value;
     let troco = '';
 
+    if (endereco.trim() === '') {
+        alert('Por favor, preencha o endereço de entrega.');
+        return;
+    }
+
     if (pagamento === 'dinheiro') {
         troco = document.getElementById('troco').value;
+        if (troco.trim() === '') {
+            alert('Por favor, informe o valor do troco.');
+            return;
+        }
     }
 
     let mensagem = 'Pedido:Oliveira Imports\n';
@@ -106,8 +136,6 @@ function confirmarPedido() {
     }
 }
 
-// Adicionei esta função ao final
 function redirecionar() {
     window.location.href = "index.html"; // Substitua pelo URL desejado
 }
-
